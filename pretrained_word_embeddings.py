@@ -3,8 +3,9 @@ import numpy as np
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 
-imdb_dir = 'C:\/Users\mbrad\Downloads\kaggle\/aclImdb'
-train_dir = os.path.join(imdb_dir, 'train')
+
+base_dir = 'C:\/Users\mbrad\Downloads\kaggle\/aclImdb'
+train_dir = os.path.join(base_dir, 'train')
 
 texts = []
 labels = []
@@ -21,32 +22,33 @@ for label_type in ['pos', 'neg']:
             else:
                 labels.append(1)
 
+
 maxlen = 100
 max_words = 10000
-train_sample = 200
-val_sample = 10000
+train_samples = 200
+val_samples = 10000
 
 tokenizer = Tokenizer(num_words=max_words)
 tokenizer.fit_on_texts(texts)
 
-sequences = tokenizer.texts_to_sequences(texts)
+sequence = tokenizer.texts_to_sequences(texts)
 word_index = tokenizer.word_index
-print('Unique tokens: ', len(word_index))
+print('Found {}s unique tokens')
 
-data = pad_sequences(sequences, maxlen=maxlen)
+data = pad_sequences(sequence, maxlen=maxlen)
 labels = np.asarray(labels)
 print('Data tensor shape: ', data.shape)
-print('Labels tensor shape: ', labels.shape)
+print('Label tensor shape: ', labels.shape)
 
 indices = np.arange(data.shape[0])
 np.random.shuffle(indices)
 data = data[indices]
 labels = labels[indices]
 
-x_train = data[:train_sample]
-y_train = labels[:train_sample]
-x_val = data[train_sample: train_sample + val_sample]
-y_val = labels[train_sample: train_sample + val_sample]
+x_train = data[:train_samples]
+y_train = labels[: train_samples]
+x_val = data[train_samples: train_samples + val_samples]
+y_val = labels[train_samples: train_samples + val_samples]
 
 
 glove_dir = 'C:\/Users\mbrad\Downloads\kaggle\glove'
@@ -59,6 +61,8 @@ for line in f:
     coefs = np.asarray(values[1:], dtype='float32')
     embeddings_index[word] = coefs
 f.close()
+print('Found {}s word vectors'.format(len(embeddings_index)))
+
 
 embedding_dim = 100
 
@@ -69,4 +73,7 @@ for word, i in word_index.items():
         if embedding_vector is not None:
             embedding_matrix[i] = embedding_vector
 
-print('Found {}s word vectors'.format(len(embeddings_index)))
+
+
+
+
