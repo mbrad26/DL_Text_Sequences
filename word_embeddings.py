@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 from keras import models
-from keras.layers import Embedding, Flatten, Dense, Dropout
+from keras.layers import Embedding, Flatten, Dense
 from keras import preprocessing
 from keras.datasets import imdb
 
